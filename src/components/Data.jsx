@@ -4,6 +4,8 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import styled from 'styled-components'
+import { useEffect, useState } from 'react'
+import { db } from '../firebase'
 
 const DataContainer = styled.div`
   flex: 1 1;
@@ -72,6 +74,18 @@ const DataListRow = styled.div`
   }
 `
 const Data = () => {
+  const [files, setFiles] = useState([])
+  useEffect(() => {
+    db.collection('myfiles').onSnapshot(snapshot => {
+      const files = snapshot.docs.map(doc => {
+        return {
+          id: doc.id,
+          data: doc.data(),
+        }
+      })
+      setFiles([...files])
+    })
+  }, [])
   return (
     <DataContainer>
       <DataHeader>
@@ -86,18 +100,13 @@ const Data = () => {
       </DataHeader>
       <div className=''>
         <DataGrid>
-          <DataFile>
-            <InsertDriveFileIcon />
-            <p>File Name</p>
-          </DataFile>
-          <DataFile>
-            <InsertDriveFileIcon />
-            <p>File Name</p>
-          </DataFile>
-          <DataFile>
-            <InsertDriveFileIcon />
-            <p>File Name</p>
-          </DataFile>
+          {files &&
+            files.map(file => (
+              <DataFile key={file.id}>
+                <InsertDriveFileIcon />
+                <p>{file.data.filename}</p>
+              </DataFile>
+            ))}
         </DataGrid>
         <div className=''>
           <DataListRow>
@@ -114,14 +123,19 @@ const Data = () => {
               <b>File size</b>
             </p>
           </DataListRow>
-          <DataListRow>
-            <p>
-              Name <InsertDriveFileIcon />{' '}
-            </p>
-            <p>Me</p>
-            <p> Yesterday</p>
-            <p>1 GB</p>
-          </DataListRow>
+          {files &&
+            files.map(file => (
+              <DataListRow key={file.id}>
+                <p>
+                  {console.log(file)}
+                  <InsertDriveFileIcon />
+                  {file.data.filename}
+                </p>
+                <p>Me</p>
+                <p> {JSON.stringify(file.data.timestamp)}</p>
+                <p> {file.data.size}</p>
+              </DataListRow>
+            ))}
         </div>
       </div>
     </DataContainer>
