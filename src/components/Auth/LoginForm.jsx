@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { auth } from '../../API/firebase'
+import { useDispatch } from 'react-redux'
+import { signInUser } from '../../redux/actionCreators/authActionCreator'
 
 const LoginForm = () => {
   const [state, setState] = useState({
     email: '',
     password: '',
   })
+  const dispatch = useDispatch()
 
   const handleChange = event => {
     event.preventDefault()
@@ -22,18 +24,12 @@ const LoginForm = () => {
       return
     }
     const { email, password } = state
-    auth.signInWithEmailAndPassword(email, password).then(
-      user => console.log('succes', email, password),
-      error => console.log(error)
-    )
+    dispatch(signInUser(email, password))
   }
   return (
     <>
-      <form autoComplete='off' onSubmit={handleFormSubmit}>
+      <form autoComplete='off' onSubmit={handleFormSubmit} className='w-100'>
         <div className='mb-3'>
-          <label htmlFor='email' className='form-label'>
-            Email
-          </label>
           <input
             id='email'
             type='email'
@@ -45,9 +41,6 @@ const LoginForm = () => {
           />
         </div>
         <div className='mb-3'>
-          <label htmlFor='password' className='form-label'>
-            Password
-          </label>
           <input
             id='password'
             type='password'

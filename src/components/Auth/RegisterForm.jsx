@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { signUpUser } from '../../redux/actionCreators/authActionCreator'
 
 const RegisterForm = () => {
   const [state, setState] = useState({
@@ -7,6 +9,7 @@ const RegisterForm = () => {
     password: '',
     confirmPassword: '',
   })
+  const dispatch = useDispatch()
 
   const handleChange = event => {
     event.preventDefault()
@@ -18,7 +21,16 @@ const RegisterForm = () => {
 
   const handleFormSubmit = event => {
     event.preventDefault()
-    console.log(state)
+    const { name, email, password, confirmPassword } = state
+    if (!name || !email || !password || !confirmPassword) {
+      alert('Please fill all the fields')
+      return
+    }
+    if (password !== confirmPassword) {
+      alert('Confirm password does not match with password')
+      return
+    }
+    dispatch(signUpUser(email, name, password))
   }
   return (
     <>
@@ -47,7 +59,7 @@ const RegisterForm = () => {
         </div>
         <div className='mb-3'>
           <div className='row'>
-            <div className='col'>
+            <div className='col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
               <input
                 id='password'
                 type='password'
@@ -58,7 +70,7 @@ const RegisterForm = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className='col'>
+            <div className='col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mt-3 mt-sm-0 mt-md-0 mt-lg-0 mt-xl-0 mt-xxl-0'>
               <input
                 id='confirm-password'
                 type='password'
