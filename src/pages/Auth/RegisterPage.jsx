@@ -1,5 +1,11 @@
-const Register = () => {
-  return <div>Register</div>
+import { RegisterForm } from '../../components/Auth'
+
+const RegisterPage = () => {
+  return (
+    <>
+      <RegisterForm />
+    </>
+  )
 }
 
-export default Register
+export default RegisterPage

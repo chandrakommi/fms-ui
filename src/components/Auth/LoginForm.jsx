@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { auth } from '../../API/firebase'
 
- const LoginForm = () => {
+const LoginForm = () => {
   const [state, setState] = useState({
     email: '',
     password: '',
@@ -20,18 +21,17 @@ import { useState } from 'react'
       alert(`please fill the feilds to sigin`)
       return
     }
+    const { email, password } = state
+    auth.signInWithEmailAndPassword(email, password).then(
+      user => console.log('succes', email, password),
+      error => console.log(error)
+    )
   }
   return (
     <>
-      <form
-        autoComplete='off'
-        onSubmit={handleFormSubmit}
-      >
+      <form autoComplete='off' onSubmit={handleFormSubmit}>
         <div className='mb-3'>
-          <label
-            htmlFor='email'
-            className='form-label'
-          >
+          <label htmlFor='email' className='form-label'>
             Email
           </label>
           <input
@@ -45,10 +45,7 @@ import { useState } from 'react'
           />
         </div>
         <div className='mb-3'>
-          <label
-            htmlFor='password'
-            className='form-label'
-          >
+          <label htmlFor='password' className='form-label'>
             Password
           </label>
           <input
@@ -62,10 +59,7 @@ import { useState } from 'react'
           />
         </div>
         <div className='mb-3'>
-          <button
-            type='submit'
-            className='btn btn-primary w-100'
-          >
+          <button type='submit' className='btn btn-primary w-100'>
             Login
           </button>
         </div>
